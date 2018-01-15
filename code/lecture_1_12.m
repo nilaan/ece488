@@ -9,14 +9,14 @@ clear all;
 close all;
 
 %%
-syms th thd thdd T t
+syms th thd thdd T
 
 tspan = [0 10];
 
 x = [th; thd];
 u = T;
 
-x0 = [0.1; 0];
+x0 = [0; 0];
 xbar = [0; 0];
 ubar = [0];
 
@@ -27,7 +27,7 @@ m = length(u); % inputs
 f_eq = thdd+thd+sin(th) == T;
 f(1) = thd;
 f(2) = solve(f_eq, thdd);
-u_t = @(t) (heaviside(t)-heaviside(t-0.1));
+u_t = @(t) (heaviside(t)-heaviside(t-0.5));
 
 [t1, x1] = ode45(@(t1, x1) nonLinearFunc(f, x, x1, u, u_t(t1), t1), tspan, x0);
 figure, plot(t1, x1(:, 1));
