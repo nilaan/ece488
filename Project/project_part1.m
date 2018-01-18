@@ -8,7 +8,7 @@ clear all;
 close all;
 
 %% Part 1
-syms T1 T2 q1 q1d q1dd q2 q2d q2dd
+syms T1 T2 q1 q1d q1dd q2 q2d q2dd t
 
 g = 9.81;
 m1 = 1;
@@ -26,14 +26,14 @@ f_eq(2) = T2 == (m2*l2^2/3+m2*l1*l2/2*cos(q2))*q1dd+m2*l2^2/3*q2dd+m2*l1*l2*sin(
 
 %% State Functions
 x = [q1; q1d; q2; q2d];
-u = [T1; T2;];
+u = [T1; T2];
 
 xbar = [0; 0; 0; 0];
 ubar = [0; 0];
 
 x0 = [0; 0; 0; 0];
 
-tspan = [0 10];
+tspan = [0 30];
 
 [f_q1dd, f_q2dd] = solve(f_eq, [q1dd q2dd]);
 
@@ -42,7 +42,7 @@ f(2) = f_q1dd; % == q1dd
 f(3) = q2d; % == q2d
 f(4) = f_q2dd; % == q2dd
 
-u_t = @(t) [heaviside(t)-heaviside(t-0.5); 0];
+u_t = @(t) [heaviside(t)-heaviside(t-0.1); 0];
 
 %% Linearize
 A = subs(jacobian(f, x), [x; u], [xbar; ubar]);
@@ -51,8 +51,10 @@ B = subs(jacobian(f, u), [x; u], [xbar; ubar]);
 A_t = double(A);
 B_t = double(B);
 
+%% Simulate
 [t2, x2] = ode45(@(t2, x2)A_t*x2+B_t*u_t(t2), tspan, x0);
 figure, plot(t2, x2(:, 3));
+figure, plot(t2, x2(:, 1));
 
 
 
