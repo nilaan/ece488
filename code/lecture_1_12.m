@@ -26,6 +26,7 @@ m = length(u); % inputs
 %State Functions
 f_eq = thdd+thd+sin(th) == T;
 f(1) = thd;
+
 f(2) = solve(f_eq, thdd);
 u_t = @(t) (heaviside(t)-heaviside(t-0.5));
 
