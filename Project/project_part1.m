@@ -28,10 +28,10 @@ f_eq(2) = T2 == (m2*l2^2/3+m2*l1*l2/2*cos(q2))*q1dd+m2*l2^2/3*q2dd+m2*l1*l2*sin(
 x = [q1; q1d; q2; q2d];
 u = [T1; T2];
 
-xbar = [0; 0; 0; 0];
+xbar = [-pi/2; 0; 0; 0];
 ubar = [0; 0];
 
-x0 = [0; 0; 0; 0];
+x0 = [pi/2; 0; pi/2; 0];
 
 tspan = [0 30];
 
@@ -42,7 +42,14 @@ f(2) = f_q1dd; % == q1dd
 f(3) = q2d; % == q2d
 f(4) = f_q2dd; % == q2dd
 
-u_t = @(t) [heaviside(t)-heaviside(t-0.1); 0];
+%u_t = @(t) [heaviside(t)-heaviside(t-0.1); 0];
+u_t = @(t) [0; 0];
+
+% %% Simulate Non Linear
+% 
+% [t1, x1] = ode45(@(t1, x1) nonLinearFunc(f, x, x1, u, u_t(t1), t1), tspan, x0);
+% figure, plot(t1, x1(:, 1));
+% figure, plot(t1, x1(:, 3));
 
 %% Linearize
 A = subs(jacobian(f, x), [x; u], [xbar; ubar]);
@@ -53,8 +60,8 @@ B_t = double(B);
 
 %% Simulate
 [t2, x2] = ode45(@(t2, x2)A_t*x2+B_t*u_t(t2), tspan, x0);
-figure, plot(t2, x2(:, 3));
-figure, plot(t2, x2(:, 1));
+figure, plot(t2, x2(:, 1)), xlabel('Time'), ylabel('Q1');
+figure, plot(t2, x2(:, 3)), xlabel('Time'), ylabel('Q2');
 
 
 
