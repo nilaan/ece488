@@ -32,6 +32,7 @@ n = length(x);
 u = [T1; T2];
 
 xbar = [-pi/2; 0; 0; 0];
+
 ubar = [0; 0];
 
 x0 = [0; 0; 0; 0];
@@ -63,7 +64,7 @@ u_t = @(t, x) -C*(x-r(t));
 
 %% Simulate Non Linear
 
-% [t1, x1] = ode45(@(t1, x1) nonLinearFunc(f, x, x1, u, u_t(t1), t1), tspan, x0);
+% [t1, x1] = ode45(@(t1, x1) nonLinearFunc(f, x, x1, u, u_t(t1, x1), t1), tspan, x0);
 % figure, plot(t1, x1(:, 1)), xlabel('Time'), ylabel('Q1');
 % figure, plot(t1, x1(:, 3)), xlabel('Time'), ylabel('Q2');
 
